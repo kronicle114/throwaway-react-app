@@ -1,68 +1,85 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# React Updates
+Since I've learned React, a couple of key updates were changed. I'm doing this side project to brush up on my frontend JavaScript skills while I wait for 8p to hit & I can finally buy specialty cookies.
 
-## Available Scripts
+## create-react-app 
+I did a really painful exercise where I tried to build a react app without using Facebook's starter kit. Yeah that got somewhere after like 2 hours of messing around. But I really prefer the `create-react-app` command to set up a project quickly. Unfortunately, I found out today that `create-react-app` is a deprecated command and I would get this error message whenever I tried to set up a quick react frontend repo:
 
-In the project directory, you can run:
+```javascript
+A template was not provided. This is likely because you're using an outdated version of create-react-app.
+Please note that global installs of create-react-app are no longer supported.
+```
 
-### `yarn start`
+Solution:
+[stackoverflow](https://stackoverflow.com/questions/59188624/template-not-provided-using-create-react-app)
+Long story short, I globally uninstalled create-react-app, made sure my cache was cleared, and used the command `yarn create react-app <app_name>` to initialize a react app.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Service Workers
+Truth be told, I still don't really get service workers. But I ran into issues with deployment about a month ago that led me to a rabbit hole of figuring out what went wrong. My solution led me to enabling service worker so that I don't run into a whitescreen issues again when deploying. I think the error had to do with caching / chunking during deployment.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Types of Components
+Functional and Stateful components. Or what I like to call dumb and smart components. All it really means is whether or not the component has read only data (props) or mutable / owns its data (state).
 
-### `yarn test`
+### Functional components
+```javascript
+import React from 'react'
+export default function Dumb() {
+    const text = 'Example text'
+    return (
+        <div className="dumb">
+            {text}
+        </div>
+    )
+}
+```
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Stateful components
+```javascript
+import React from 'react'
+import Person from './Person'
 
-### `yarn build`
+export default class Smart extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            geniuses: [{
+                name: 'Ada Lovelace',
+                dates: '1815-1852'
+            }, {
+                name: 'Rosalind Franklin',
+                dates: '1920-1958'
+            }, {
+                name: 'Rear Admiral Dr. Grace M. Hopper',
+                dates: '1906-1992'
+            }]
+        }
+    }
+    render() {
+        const cards = this.state.geniuses.map((genius, index) =>
+            <li key={index}>
+                <Person {...geniuses} />
+            </li>
+        );
+        return (
+            <div>
+                <h3>{this.props.title}</h3>
+                <ul className="list">
+                    {cards}
+                </ul>
+            </div>
+        );
+    }
+}
+```
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Props & State
+It's always good to re-read the documentation on props and state.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+One way to vary the output of a component is through its props. Props are short for properties and they behave much the same way that a attribute does for an html tag. They are passed from the outside (parent component).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+In stateful components, instead of props being passed as an argument to the render method, it is accessed through `this.props.txt`. whereas functional components you call props as `props.txt`
 
-### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+A component can have as many props as you set it to. When you want a prop to have a default value, you can use defaultProps attribute. Look through `src/components/Item` for an example of defaultProps.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+There are times when you need to validate the type of props you are passing onto the component. This would make it easier to manage passing correct types of props when you are just using vanilla React versus a state manager (like Redux). Look through `src/components/List` for an example of prop-types validation. [Click here for more info](https://github.com/facebook/prop-types#usage).
+*/
